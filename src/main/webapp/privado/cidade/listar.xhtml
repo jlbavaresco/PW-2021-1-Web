@@ -16,8 +16,54 @@
                                  update="formEdicao"
                                  process="@this"
                                  oncomplete="PF('dlg').show();"/>
+                <div align="center">
+                    <p:panelGrid columns="11">
+                        <p:outputLabel value="Ordem: "/>
+                        <p:selectOneMenu value="#{controleCidade.dao.ordemAtual}" id="selectOrdem"
+                                         converter="#{controleCidade.dao.converterOrdem}">
+                            <f:selectItems value="#{controleCidade.dao.listaOrdem}"
+                                           var="ord" itemValue="#{ord.atributo}"/>
+                            <p:ajax update="listagem"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="Filtro: "/>
+                        <p:inputText value="#{controleCidade.dao.filtro}">
+                            <p:ajax update="listagem" event="blur"/>
+                        </p:inputText>
+                        <p:commandButton value="Filtrar" update="listagem"/>
+                        <p:outputLabel value="Máximo de Objetos: "/>
+                        <p:selectOneMenu value="#{controleCidade.dao.maximoObjetos}">
+                            <f:selectItem itemLabel="5" itemValue="5"/>
+                            <f:selectItem itemLabel="10" itemValue="10"/>
+                            <f:selectItem itemLabel="20" itemValue="20"/>
+                            <f:selectItem itemLabel="50" itemValue="50"/>
+                            <f:selectItem itemLabel="100" itemValue="100"/>
+                            <p:ajax update="listagem"/>
+                        </p:selectOneMenu>
+                        <p:commandButton action="#{controleCidade.dao.primeiro()}"
+                                         title="Primeiro"
+                                         icon="pi pi-step-backward"
+                                         update="listagem"/>
+                        <p:commandButton action="#{controleCidade.dao.anterior()}"
+                                         title="Anterior"
+                                         icon="pi pi-chevron-left"
+                                         update="listagem"/>
+                        <p:commandButton action="#{controleCidade.dao.proximo()}"
+                                         title="Proximo"
+                                         icon="pi pi-chevron-right"
+                                         update="listagem"/>
+                        <p:commandButton action="#{controleCidade.dao.ultimo()}"
+                                         title="Ultimo"
+                                         icon="pi pi-step-forward"
+                                         update="listagem"/>
+                    </p:panelGrid>
+                </div>                
                 <p:dataTable value="#{controleCidade.dao.listaObjetos}" var="obj"
                              id="listagem">
+                    <f:facet name="footer">
+                        <div align="center">
+                            <p:outputLabel value="#{controleCidade.dao.mensagemNavegacao}"/>
+                        </div>
+                    </f:facet>                    
                     <p:column headerText="ID">
                         <p:outputLabel value="#{obj.id}"/>
                     </p:column>
@@ -42,13 +88,14 @@
                                              icon="pi pi-trash"
                                              title="Excluir"
                                              update="formListagem"
-                            onclick="if (!confirm('Confirma a exclusão?')) return false"/>                                                                         
+                                             onclick="if (!confirm('Confirma a exclusão?'))
+                                        return false"/>                                                                         
                         </div>                                                        
                     </p:column>
                 </p:dataTable>                
             </h:form>
             <p:dialog header="Edição" widgetVar="dlg" resizable="false"
-                modal="modal" width="50%" height="100%">
+                      modal="modal" width="50%" height="100%">
                 <h:form id="formEdicao" prependId="false">
                     <p:growl id="growl"/>
                     <div align="center">
@@ -78,7 +125,7 @@
                             <p:commandButton value="Salvar" icon="pi pi-save"
                                              actionListener="#{controleCidade.salvar()}"
                                              update="formEdicao formListagem"
-                            oncomplete="if(!args.validationFailed){PF('dlg').hide();}"/>
+                                             oncomplete="if(!args.validationFailed){PF('dlg').hide();}"/>
                         </div>
                     </p:panel>
                 </h:form>    

@@ -25,8 +25,14 @@
                                         value="Manutenção de Cidades"
                                         ajax="false"/>                            
                         </p:submenu>
+                        <p:submenu label="Futebol">
+                            <p:menuitem action="#{controleTime.listar()}"
+                                        value="Manutenção de Times"
+                                        ajax="false"/>                          
+                        </p:submenu>                        
                     </p:column>
                 </p:submenu>
+                
             </p:megaMenu>
         </h:form>
         <ui:insert name="conteudo">

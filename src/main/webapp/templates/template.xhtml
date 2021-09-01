@@ -23,7 +23,10 @@
                                         ajax="false"/>
                             <p:menuitem action="#{controleCidade.listar()}"
                                         value="Manutenção de Cidades"
-                                        ajax="false"/>                            
+                                        ajax="false"/> 
+                            <p:menuitem action="#{controleUsuario.listar()}"
+                                        value="Manutenção de Usuários"
+                                        ajax="false"/>                                 
                         </p:submenu>
                         <p:submenu label="Futebol">
                             <p:menuitem action="#{controleTime.listar()}"
@@ -32,11 +35,11 @@
                         </p:submenu>                        
                     </p:column>
                 </p:submenu>
-                
+
             </p:megaMenu>
         </h:form>
         <ui:insert name="conteudo">
-            
+
         </ui:insert>
         <ui:include src="ajaxstatus.xhtml"/>
     </h:body>

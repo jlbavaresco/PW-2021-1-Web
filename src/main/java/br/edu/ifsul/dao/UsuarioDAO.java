@@ -4,6 +4,7 @@ import br.edu.ifsul.converters.ConverterOrdem;
 import br.edu.ifsul.modelo.Usuario;
 import java.io.Serializable;
 import javax.ejb.Stateful;
+import javax.persistence.Query;
 
 /**
  *
@@ -12,20 +13,41 @@ import javax.ejb.Stateful;
  * @organization IFSUL - Campus Passo Fundo
  */
 @Stateful
-public class UsuarioDAO<TIPO> extends DAOGenerico<Usuario> implements Serializable {
+public class UsuarioDAO<TIPO>  extends DAOGenerico<Usuario> implements Serializable {
     
     public UsuarioDAO(){
         super();
         classePersistente = Usuario.class;
-        // definição da lista de ordenações
-        listaOrdem.add(new Ordem("nomeUsuario","Usuário", "like"));
-        listaOrdem.add(new Ordem("nome","Nome", "like"));
-        // definição da ordem atual
-        ordemAtual = listaOrdem.get(1); // vai pegar o segundo da lista de ordens
-        // criando uma instancia do conversor
+        // definir as ordens possíveis
+        listaOrdem.add(new Ordem("nomeUsuario", "Nome de usuário", "like"));
+        listaOrdem.add(new Ordem("nome", "Nome", "like"));
+        listaOrdem.add(new Ordem("email", "Email", "like"));
+        // difinir a ordem inicial
+        ordemAtual = listaOrdem.get(1);
+        // inicializar o conversor das ordens
         converterOrdem = new ConverterOrdem();
-        // associando a lista de ordens ao conversor
-        converterOrdem.setListaOrdem(listaOrdem);
+        converterOrdem.setListaOrdem(listaOrdem);        
+                
     }
+    
+    
+    @Override
+    public Usuario localizar(Object id) throws Exception {
+        Usuario obj = em.find(Usuario.class, id);
+        // uso para evitar o erro de lazy inicialization exception
+        obj.getPermissoes().size();
+        return obj;
+    }     
+    
+    public boolean verificaUnicidadeNomeUsuario(String nomeUsuario) throws Exception {
+        String jpql = "from Usuario where nomeUsuario = :pNomeUsuario";
+        Query query = em.createQuery(jpql);
+        query.setParameter("pNomeUsuario", nomeUsuario);
+        if (query.getResultList().size() > 0){
+            return false;
+        } else {
+            return true;
+        }
+    }    
 
 }

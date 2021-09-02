@@ -22,7 +22,7 @@ import javax.inject.Named;
 @Named(value = "controleUsuario")
 @ViewScoped
 public class ControleUsuario implements Serializable {
-    
+
     @EJB
     private UsuarioDAO<Usuario> dao;
     private Usuario objeto;
@@ -31,36 +31,40 @@ public class ControleUsuario implements Serializable {
     private PermissaoDAO<Permissao> daoPermissao;
     private Permissao permissao;
     private int abaAtiva;
-    
+
     public ControleUsuario() {
-        
+
     }
-    
+
     public void removerPermissao(Permissao obj) {
         objeto.getPermissoes().remove(obj);
         Util.mensagemInformacao("Permissão removida com sucesso!");
     }
-    
+
     public void adicionarPermissao() {
         if (!objeto.getPermissoes().contains(permissao)) {
-            objeto.getPermissoes().add(permissao);
-            Util.mensagemInformacao("Permissão adicionada com sucesso!");
+            if (permissao != null) {
+                objeto.getPermissoes().add(permissao);
+                Util.mensagemInformacao("Permissão adicionada com sucesso!");
+            } else {
+                Util.mensagemErro("Selecione a permissão");
+            }
         } else {
             Util.mensagemErro("Usuário já possui esta permissão");
         }
     }
-    
+
     public void verificarUnicidadeNomeUsuario() {
         if (novo) {
             try {
-                if (!dao.verificaUnicidadeNomeUsuario(objeto.getNomeUsuario())){
+                if (!dao.verificaUnicidadeNomeUsuario(objeto.getNomeUsuario())) {
                     Util.mensagemErro("Nome de usuário '" + objeto.getNomeUsuario() + "' "
                             + " já existe no banco de dados!");
                     objeto.setNomeUsuario(null);
                     // capturar o componente que chamou o método
-                    UIComponent comp = 
-                            UIComponent.getCurrentComponent(FacesContext.getCurrentInstance());
-                    if (comp != null){
+                    UIComponent comp
+                            = UIComponent.getCurrentComponent(FacesContext.getCurrentInstance());
+                    if (comp != null) {
                         // deixar em vermelho após o update
                         UIInput input = (UIInput) comp;
                         input.setValid(false);
@@ -71,17 +75,17 @@ public class ControleUsuario implements Serializable {
             }
         }
     }
-    
+
     public String listar() {
         return "/privado/usuario/listar?faces-redirect=true";
     }
-    
+
     public void novo() {
         objeto = new Usuario();
         novo = true;
         abaAtiva = 0;
     }
-    
+
     public void alterar(Object id) {
         try {
             objeto = dao.localizar(id);
@@ -91,7 +95,7 @@ public class ControleUsuario implements Serializable {
             Util.mensagemInformacao("Erro ao recuperar objeto: " + Util.getMensagemErro(e));
         }
     }
-    
+
     public void excluir(Object id) {
         try {
             objeto = dao.localizar(id);
@@ -101,7 +105,7 @@ public class ControleUsuario implements Serializable {
             Util.mensagemInformacao("Erro ao remover objeto: " + Util.getMensagemErro(e));
         }
     }
-    
+
     public void salvar() {
         try {
             if (novo) {
@@ -114,43 +118,43 @@ public class ControleUsuario implements Serializable {
             Util.mensagemInformacao("Erro ao salvar objeto: " + Util.getMensagemErro(e));
         }
     }
-    
+
     public UsuarioDAO<Usuario> getDao() {
         return dao;
     }
-    
+
     public void setDao(UsuarioDAO<Usuario> dao) {
         this.dao = dao;
     }
-    
+
     public Usuario getObjeto() {
         return objeto;
     }
-    
+
     public void setObjeto(Usuario objeto) {
         this.objeto = objeto;
     }
-    
+
     public Boolean getNovo() {
         return novo;
     }
-    
+
     public void setNovo(Boolean novo) {
         this.novo = novo;
     }
-    
+
     public PermissaoDAO<Permissao> getDaoPermissao() {
         return daoPermissao;
     }
-    
+
     public void setDaoPermissao(PermissaoDAO<Permissao> daoPermissao) {
         this.daoPermissao = daoPermissao;
     }
-    
+
     public Permissao getPermissao() {
         return permissao;
     }
-    
+
     public void setPermissao(Permissao permissao) {
         this.permissao = permissao;
     }
@@ -162,5 +166,5 @@ public class ControleUsuario implements Serializable {
     public void setAbaAtiva(int abaAtiva) {
         this.abaAtiva = abaAtiva;
     }
-    
+
 }

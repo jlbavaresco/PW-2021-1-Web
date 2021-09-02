@@ -16,6 +16,11 @@
                                  update="formEdicao"
                                  process="@this"
                                  oncomplete="PF('dlg').show();"/>
+                <p:commandButton value="Imprimir"
+                                 action="#{controleTime.imprimeTimes()}"
+                                 icon="pi pi-print"
+                                 ajax="false"
+                                 onclick="this.form.target = '_blank';"/>
                 <div align="center">
                     <p:panelGrid columns="11">
                         <p:outputLabel value="Ordem: "/>

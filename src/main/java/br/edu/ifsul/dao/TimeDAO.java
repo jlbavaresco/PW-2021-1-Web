@@ -3,6 +3,7 @@ package br.edu.ifsul.dao;
 import br.edu.ifsul.converters.ConverterOrdem;
 import br.edu.ifsul.modelo.Time;
 import java.io.Serializable;
+import java.util.List;
 import javax.ejb.Stateful;
 
 /**
@@ -36,6 +37,11 @@ public class TimeDAO<TIPO> extends DAOGenerico<Time> implements Serializable {
         // dar um erro de lazy inicialization exception
         objeto.getJogadores().size();        
         return objeto;
+    }
+    
+    public List<Time> getListaCompleta(){
+        String jpql = "select distinct t from Time t join fetch t.jogadores order by t.id";
+        return em.createQuery(jpql).getResultList();        
     }
         
 

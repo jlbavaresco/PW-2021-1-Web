@@ -14,7 +14,9 @@ import br.edu.ifsul.modelo.Usuario;
 import br.edu.ifsul.util.Util;
 import br.edu.ifsul.util.UtilRelatorios;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
@@ -46,30 +48,42 @@ public class ControleTime implements Serializable {
     public ControleTime() {
 
     }
-    
-    public void imprimeTimes(){
+
+    public void imprimeTimes() {
         HashMap parametros = new HashMap();
-        UtilRelatorios.imprimeRelatorio("relatorioTimes", parametros, dao.getListaTodos());
+        UtilRelatorios.imprimeRelatorio("relatorioTimes", parametros, dao.getListaCompleta());
     }
-    
-    public void novoJogador(){
+
+    public void imprimeTime(Object id) {
+        try {
+            objeto = dao.localizar(id);
+            List<Time> lista = new ArrayList<>();
+            lista.add(objeto);
+            HashMap parametros = new HashMap();
+            UtilRelatorios.imprimeRelatorio("relatorioTimes", parametros, lista);
+        } catch (Exception e) {
+            Util.mensagemErro("Erro ao imprimir relatório: " + Util.getMensagemErro(e));
+        }
+    }
+
+    public void novoJogador() {
         novoJogador = true;
         jogador = new Jogador();
     }
-    
-    public void alterarJogador(int index){
+
+    public void alterarJogador(int index) {
         jogador = objeto.getJogadores().get(index);
         novoJogador = false;
     }
-    
-    public void salvarJogador(){
-        if (novoJogador){
+
+    public void salvarJogador() {
+        if (novoJogador) {
             objeto.adicionarJogador(jogador);
         }
         Util.mensagemInformacao("Jogador adicionado ou atualizado com sucesso");
     }
-    
-    public void removerJogador(int index){
+
+    public void removerJogador(int index) {
         objeto.removerJogador(index);
         Util.mensagemInformacao("Jogador removido com sucesso!");
     }
@@ -89,26 +103,26 @@ public class ControleTime implements Serializable {
             Util.mensagemErro("Erro ao recuperar objeto: " + Util.getMensagemErro(e));
         }
     }
-    
-    public void excluir(Object id){
+
+    public void excluir(Object id) {
         try {
             objeto = dao.localizar(id);
             dao.remover(objeto);
             Util.mensagemInformacao("Objeto removido com sucesso");
-        } catch (Exception e){
+        } catch (Exception e) {
             Util.mensagemErro("Erro ao remover objeto: " + Util.getMensagemErro(e));
         }
     }
-    
-    public void salvar(){
+
+    public void salvar() {
         try {
-            if (objeto.getId() == null){
+            if (objeto.getId() == null) {
                 dao.persist(objeto);
             } else {
                 dao.merge(objeto);
             }
             Util.mensagemInformacao("Objeto persistido com sucesso!");
-        } catch (Exception e){
+        } catch (Exception e) {
             Util.mensagemErro("Erro ao persistir objeto: " + Util.getMensagemErro(e));
         }
     }

@@ -95,9 +95,9 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="90" splitType="Stretch">
+		<band height="110" splitType="Stretch">
 			<rectangle>
-				<reportElement style="zebra" stretchType="ElementGroupHeight" x="0" y="0" width="555" height="90" uuid="8ce3ec06-a4ac-488a-b195-6d50b663fa42"/>
+				<reportElement style="zebra" stretchType="ElementGroupHeight" x="0" y="0" width="555" height="110" uuid="8ce3ec06-a4ac-488a-b195-6d50b663fa42"/>
 			</rectangle>
 			<textField>
 				<reportElement x="10" y="0" width="40" height="30" uuid="c8204da9-fa96-4a04-9ac2-a17863b7627d">
@@ -146,6 +146,13 @@
 				<textElement markup="html"/>
 				<textFieldExpression><![CDATA[$F{historia}]]></textFieldExpression>
 			</textField>
+			<subreport>
+				<reportElement x="10" y="90" width="534" height="20" uuid="cc534c8e-8ca2-45e7-80c1-25e11d271d8e"/>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource(
+	(java.util.List<br.edu.ifsul.modelo.Jogador>)$F{jogadores}
+)]]></dataSourceExpression>
+				<subreportExpression><![CDATA["subJogadores.jasper"]]></subreportExpression>
+			</subreport>
 		</band>
 	</detail>
 	<pageFooter>
